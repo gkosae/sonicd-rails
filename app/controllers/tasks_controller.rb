@@ -5,7 +5,14 @@ class TasksController < ApplicationController
 
     if url.nil? || url.empty?
       return json_response(
-        { error: "url cannot be empty" },
+        { error: "Url cannot be empty" },
+        success: false
+      )
+    end
+
+    if destination_directory.nil? || destination_directory.empty?
+      return json_response(
+        { error: "Destination cannot be empty" },
         success: false
       )
     end
