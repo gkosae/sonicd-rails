@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
   def create
     url = params[:url]
-    destination_directory = params[:destination_directory]
+    destination_directory = destination_param
 
     if url.nil? || url.empty?
       return json_response(
@@ -13,6 +13,13 @@ class TasksController < ApplicationController
     if destination_directory.nil? || destination_directory.empty?
       return json_response(
         { error: "Destination cannot be empty" },
+        success: false
+      )
+    end
+
+    if Task.in_progress.count == 5
+      return json_response(
+        { error: "Max number of tasks has been reached" },
         success: false
       )
     end
@@ -48,5 +55,10 @@ class TasksController < ApplicationController
         new(tasks).
         serializable_hash
     )
+  end
+
+  private
+  def destination_param
+    params[:destination_directory].split('/').map(&:strip).join('/')
   end
 end
