@@ -49,7 +49,14 @@ class TasksController < ApplicationController
   end
 
   def index
-    tasks = Task.order(created_at: :desc).page(1).per_page(5)
+    page = params[:page].presence || 1
+    limit = params[:limit].presence || 5
+
+    tasks = Task.order(created_at: :desc)
+      .page(page)
+      .per_page(limit)
+      .order(created_at: :desc)
+
     json_response(
       tasks: TaskSerializer.
         new(tasks).
