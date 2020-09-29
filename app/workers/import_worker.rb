@@ -5,6 +5,7 @@ class ImportWorker
   def perform(task_id)
     task = Task.find(task_id)
     task.in_progress
+    TasksChannel.task_updated(task)
     
     begin
       YoutubeDL::Media.new(task.url).import(
@@ -12,9 +13,11 @@ class ImportWorker
       )
     rescue YoutubeDL::ImportError
       task.failed
+      TasksChannel.task_updated(task)
       return
     end
 
     task.completed
+    TasksChannel.task_updated(task)
   end
 end

@@ -17,13 +17,6 @@ class TasksController < ApplicationController
       )
     end
 
-    if Task.in_progress.count == 5
-      return json_response(
-        { error: "Max number of tasks has been reached" },
-        success: false
-      )
-    end
-
     media = YoutubeDL::Media.new(url)
 
     unless media.valid?
@@ -39,13 +32,14 @@ class TasksController < ApplicationController
       destination_directory: destination_directory
     )
 
+    byebug
+    TasksChannel.task_created(task)
     ImportWorker.perform_async(task.id)
 
     json_response(
-      task: TaskSerializer.
-        new(task).
-        serializable_hash
-    )
+      task: TaskSerializer
+        .new(task)
+        .serializable_hash)
   end
 
   def index

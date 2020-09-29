@@ -79,6 +79,7 @@ set :nginx_server_name, "sonicd-api.georgeosae.com"
 set :nginx_ssl_certificate, ENV.fetch('NGINX_SSL_CERTIFICATE')
 set :nginx_ssl_certificate_key, ENV.fetch('NGINX_SSL_CERTIFICATE_KEY')
 set :nginx_proxy_pass, ENV.fetch('NGINX_PROXY_PASS')
+set :nginx_action_cable_path, ENV.fetch('ACTION_CABLE_PATH')
 
 namespace :nginx do
   task :upload_config do
