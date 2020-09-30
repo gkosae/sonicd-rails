@@ -32,7 +32,6 @@ class TasksController < ApplicationController
       destination_directory: destination_directory
     )
 
-    byebug
     TasksChannel.task_created(task)
     ImportWorker.perform_async(task.id)
 
