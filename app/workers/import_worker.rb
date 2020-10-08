@@ -11,13 +11,12 @@ class ImportWorker
       YoutubeDL::Media.new(task.url).import(
         outdir: "#{Config.import_root}/#{task.destination_directory}"
       )
+      
+      task.completed
     rescue YoutubeDL::ImportError
       task.failed
+    ensure
       TasksChannel.task_updated(task)
-      return
     end
-
-    task.completed
-    TasksChannel.task_updated(task)
   end
 end
