@@ -8,9 +8,9 @@ class ImportWorker
     TasksChannel.task_updated(task)
     
     begin
-      YoutubeDL::Media.new(task.url).import(
-        outdir: "#{Config.import_root}/#{task.destination_directory}"
-      )
+      YoutubeDL::Media
+        .new(task.url, uuid: task.media_uuid)
+        .import(outdir: "#{Config.import_root}/#{task.destination_directory}")
       
       task.completed
     rescue YoutubeDL::ImportError

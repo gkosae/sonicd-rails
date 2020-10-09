@@ -27,6 +27,7 @@ class TasksController < ApplicationController
     end
 
     task = Task.create!(
+      media_uuid: media.uuid,
       url: url,
       title: media.title,
       destination_directory: destination_directory
