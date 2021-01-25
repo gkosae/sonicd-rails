@@ -17,7 +17,7 @@ set :log_files, %W{sidekiq.log puma.access.log puma.error.log}
 set :linked_files, fetch(:linked_files, []).concat(fetch(:log_files, []).map{|log_file| "log/#{log_file}"})
 set :linked_files, fetch(:linked_files).concat(%w{ config/puma.rb db/production.sqlite3 config/master.key })
 
-set :keep_releases, 3
+set :keep_releases, 1
 
 namespace :deploy do
   namespace :check do
