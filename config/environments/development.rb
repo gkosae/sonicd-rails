@@ -1,4 +1,6 @@
 Rails.application.configure do
+  config.hosts.clear
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
@@ -35,6 +37,34 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
 
   config.action_mailer.perform_caching = false
+
+  config.action_mailer.perform_caching = false
+  config.action_mailer.default_url_options = {
+    :host =>   ENV["SMTP_DOMAIN"]
+  }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_options = {from: "no-reply@georgeosae.com"}
+
+  if ENV['MAIL_SERVER'] == 'mailcatcher'
+    config.action_mailer.smtp_settings = {
+      address: 'localhost',
+      port: 1025
+    }
+  elsif ENV['MAIL_SERVER'] == 'sendinblue'
+    config.action_mailer.smtp_settings = {
+      address:              ENV.fetch("SMTP_ADDRESS"),
+      port:                 ENV.fetch("SMTP_PORT"),
+      user_name:            ENV.fetch("SMTP_EMAIL"),
+      password:             ENV.fetch("SMTP_PASSWORD"),
+      authentication:       :login,
+      enable_starttls_auto: true
+    }
+  else
+    raise "Invalid value for SMTP_MAILER"
+  end
+
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
