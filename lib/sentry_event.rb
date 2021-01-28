@@ -2,7 +2,7 @@ require 'json'
 
 class SentryEvent
   def initialize(json)
-    @json = json
+    @json = JSON.parse(json)
   end
 
   def project

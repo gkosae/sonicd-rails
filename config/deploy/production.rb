@@ -1,5 +1,5 @@
 set :stage, :production
-set :branch, 'master'
+set :branch, 'deploy'
 set :user, ENV.fetch('DEPLOY_USER')
 server ENV.fetch('DEPLOY_SERVER'), port: ENV.fetch('DEPLOY_SERVER_SSH_PORT'), roles: [:web, :app, :db], primary: true
 
