@@ -11,7 +11,8 @@ class ImportWorker
       YoutubeDL::Media
         .new(task.url, uuid: task.media_uuid)
         .import(outdir: "#{Config.import_root}/#{task.destination_directory}")
-      
+
+      UpdateFileTags.call(Config.import_root)
       task.completed
     rescue YoutubeDL::ImportError
       task.failed

@@ -35,6 +35,7 @@ gem 'figaro'
 gem 'terrapin', '~> 0.6.0'
 gem 'rack-cors'
 gem "sentry-raven"
+gem "taglib-ruby"
 
 
 group :development, :test do

@@ -211,6 +211,7 @@ GEM
       net-ssh (>= 2.8.0)
     sshkit-sudo (0.1.0)
       sshkit (~> 1.8)
+    taglib-ruby (1.1.0)
     terrapin (0.6.0)
       climate_control (>= 0.0.3, < 1.0)
     thor (1.0.1)
@@ -270,6 +271,7 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0.0)
   sqlite3 (~> 1.4)
   sshkit-sudo
+  taglib-ruby
   terrapin (~> 0.6.0)
   turbolinks (~> 5)
   tzinfo-data
