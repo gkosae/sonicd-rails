@@ -8,6 +8,12 @@ class HooksController < ApplicationController
     head :no_content
   end
 
+  def health
+    json_response(
+      message: "Healthy"
+    )
+  end
+
   private
   def mail_list
     params[:mail_list] || []
