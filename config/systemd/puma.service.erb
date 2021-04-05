@@ -15,5 +15,9 @@ TimeoutSec=15
 Restart=always
 KillMode=process
 
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=sonicd-<%= fetch(:stage) %>-puma
+
 [Install]
 WantedBy=multi-user.target

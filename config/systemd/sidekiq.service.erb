@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=<%= current_path %>
-ExecStart=<%= "/home/#{fetch(:user)}/.rvm/bin/rvm #{fetch(:rvm_ruby_version)} do #{current_path}/bin/bundle exec sidekiq -e #{fetch(:stage)} -L #{shared_path}/log/sidekiq.log" %>
+ExecStart=<%= "/home/#{fetch(:user)}/.rvm/bin/rvm #{fetch(:rvm_ruby_version)} do #{current_path}/bin/bundle exec sidekiq -e #{fetch(:stage)}" %>
 User=<%= fetch(:user) %>
 UMask=0002
 
@@ -15,6 +15,10 @@ Environment=MALLOC_ARENA_MAX=2
 
 RestartSec=1
 Restart=on-failure
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=sonicd-<%= fetch(:stage) %>-sidekiq
 
 [Install]
 WantedBy=multi-user.target
