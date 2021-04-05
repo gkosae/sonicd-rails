@@ -10,12 +10,13 @@ set :service_file_prefix, 'sonicd'
 
 set :rvm_type, :user
 set :rvm_ruby_version, '2.7.1'
-set :ssh_options,     { forward_agent: true, user: fetch(:user), keys: %w(~/.ssh/id_rsa)}
+# set :ssh_options,     { forward_agent: true, user: fetch(:user), keys: %w(~/.ssh/id_rsa)}
+set :ssh_options, {}
 
-set :linked_dirs, fetch(:linked_dirs, []).concat(%w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system })
-set :log_files, %W{sidekiq.log puma.access.log puma.error.log}
-set :linked_files, fetch(:linked_files, []).concat(fetch(:log_files, []).map{|log_file| "log/#{log_file}"})
-set :linked_files, fetch(:linked_files).concat(%w{ config/puma.rb db/production.sqlite3 config/master.key })
+set :linked_dirs, fetch(:linked_dirs, []).concat(%w[log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system])
+set :log_files, %w[sidekiq.log puma.access.log puma.error.log]
+set :linked_files, fetch(:linked_files, []).concat(fetch(:log_files, []).map { |log_file| "log/#{log_file}" })
+set :linked_files, fetch(:linked_files).concat(%w[config/puma.rb db/production.sqlite3 config/master.key])
 
 set :keep_releases, 1
 
@@ -23,7 +24,7 @@ namespace :deploy do
   namespace :check do
     task :create_log_files do
       on roles(:app) do
-        fetch(:log_files, []).each {|log_file| execute :touch, "#{shared_path}/log/#{log_file}"}
+        fetch(:log_files, []).each { |log_file| execute :touch, "#{shared_path}/log/#{log_file}" }
       end
     end
 
@@ -33,7 +34,7 @@ namespace :deploy do
           'manifest.json',
           '.manifest.json',
           '.sprockets-manifest.json'
-        ].each {|file| execute :touch, "#{shared_path}/public/assets/#{file}" }
+        ].each { |file| execute :touch, "#{shared_path}/public/assets/#{file}" }
       end
     end
   end
@@ -42,7 +43,6 @@ end
 namespace :app do
   task :start do
     on roles(:app) do
-      puts 'Starting application'
       invoke 'systemd:puma:start'
       invoke 'systemd:sidekiq:start'
     end
@@ -50,7 +50,6 @@ namespace :app do
 
   task :stop do
     on roles(:app) do
-      puts 'Stopping application'
       invoke 'systemd:sidekiq:stop'
       invoke 'systemd:puma:stop'
     end
@@ -58,7 +57,6 @@ namespace :app do
 
   task :restart do
     on roles(:app) do
-      puts 'Restarting application'
       invoke 'systemd:sidekiq:restart'
       invoke 'systemd:puma:reload'
     end
@@ -75,7 +73,7 @@ namespace :puma do
   end
 end
 
-set :nginx_server_name, "sonicd-api.georgeosae.com"
+set :nginx_server_name, 'sonicd-api.georgeosae.com'
 set :nginx_ssl_certificate, ENV.fetch('NGINX_SSL_CERTIFICATE')
 set :nginx_ssl_certificate_key, ENV.fetch('NGINX_SSL_CERTIFICATE_KEY')
 set :nginx_proxy_pass, ENV.fetch('NGINX_PROXY_PASS')
@@ -87,11 +85,11 @@ namespace :nginx do
       nginx_config_template = "#{__dir__}/nginx.conf.erb"
       config = ERB.new(File.new(nginx_config_template).read).result(binding)
       upload! StringIO.new(config), "#{fetch(:tmp_dir)}/#{fetch(:nginx_server_name)}"
-      
+
       sudo :mv, "#{fetch(:tmp_dir)}/#{fetch(:nginx_server_name)}", "/etc/nginx/sites-available/#{fetch(:nginx_server_name)}"
       sudo :rm, "/etc/nginx/sites-enabled/#{fetch(:nginx_server_name)}"
-      sudo :ln, "-s", "/etc/nginx/sites-available/#{fetch(:nginx_server_name)}", "/etc/nginx/sites-enabled/#{fetch(:nginx_server_name)}"
-      sudo :nginx, "-t"
+      sudo :ln, '-s', "/etc/nginx/sites-available/#{fetch(:nginx_server_name)}", "/etc/nginx/sites-enabled/#{fetch(:nginx_server_name)}"
+      sudo :nginx, '-t'
       sudo :service, :nginx, :reload
     end
   end
@@ -118,6 +116,6 @@ before 'deploy:check:linked_files', 'deploy:check:create_manifest_files'
 before 'deploy:check:linked_files', 'systemd:upload'
 before 'deploy:check:linked_files', 'puma:upload_config'
 after 'deploy:log_revision',     'systemd:puma:restart'
-after 'systemd:puma:restart',     'nginx:upload_config'
+after 'systemd:puma:restart', 'nginx:upload_config'
 before 'deploy:symlink:release', 'systemd:sidekiq:stop'
 after 'deploy:symlink:release',  'systemd:sidekiq:start'
