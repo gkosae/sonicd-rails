@@ -56,7 +56,7 @@ Rails.application.configure do
   config.log_level = :debug
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
@@ -66,13 +66,13 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "sonicd_production"
 
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_options = {from: "no-reply@georgeosae.com"}
+  config.action_mailer.default_options = { from: 'no-reply@georgeosae.com' }
   config.action_mailer.smtp_settings = {
-    address:              ENV.fetch("SMTP_ADDRESS"),
-    port:                 ENV.fetch("SMTP_PORT"),
-    user_name:            ENV.fetch("SMTP_EMAIL"),
-    password:             ENV.fetch("SMTP_PASSWORD"),
-    authentication:       :login,
+    address: ENV.fetch('SMTP_ADDRESS'),
+    port: ENV.fetch('SMTP_PORT'),
+    user_name: ENV.fetch('SMTP_EMAIL'),
+    password: ENV.fetch('SMTP_PASSWORD'),
+    authentication: :login,
     enable_starttls_auto: true
   }
 
@@ -94,7 +94,7 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
+  if ENV['RAILS_LOG_TO_STDOUT'].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)

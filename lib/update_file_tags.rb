@@ -4,9 +4,9 @@ class UpdateFileTags
   class << self
     def call(root_dir)
       Dir.glob("#{root_dir}/**/*.mp3")
-        .each do |file|
-          update_tags(file, root_dir)
-        end
+         .each do |file|
+        update_tags(file, root_dir)
+      end
     end
 
     def update_tags(file, root_dir)

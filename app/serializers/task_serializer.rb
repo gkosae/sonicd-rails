@@ -7,13 +7,14 @@ class TaskSerializer
 
   def serializable_hash
     if @resource.respond_to?(:each)
-      return collection(@resource)
+      collection(@resource)
     else
-      return single(@resource)
+      single(@resource)
     end
   end
 
   private
+
   def single(task)
     {
       id: task.id,
@@ -26,6 +27,6 @@ class TaskSerializer
   end
 
   def collection(tasks)
-    tasks.map{|task| single(task)}
+    tasks.map { |task| single(task) }
   end
 end

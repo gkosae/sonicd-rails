@@ -12,19 +12,19 @@ class TasksChannel < ApplicationCable::Channel
     def task_created(task)
       broadcast(event: Events::CREATED, task: task)
     end
-  
+
     def task_updated(task)
       broadcast(event: Events::UPDATED, task: task)
     end
-  
+
     def broadcast(event:, task:)
       ActionCable.server.broadcast(
-        'tasks_channel', 
+        'tasks_channel',
         message: {
           event: event,
-          task: TaskSerializer.
-            new(task).
-            serializable_hash
+          task: TaskSerializer
+            .new(task)
+            .serializable_hash
         }
       )
     end

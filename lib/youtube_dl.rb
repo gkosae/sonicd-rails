@@ -1,5 +1,6 @@
 require 'terrapin'
 require 'securerandom'
+require 'json'
 
 class YoutubeDL
   class ImportError < StandardError; end
@@ -8,9 +9,7 @@ class YoutubeDL
     attr_reader :url, :uuid
 
     def initialize(url, uuid: nil)
-      if url.nil? || url.empty?
-        raise ArgumentError, 'url cannot be nil or empty'
-      end
+      raise ArgumentError, 'url cannot be nil or empty' if url.nil? || url.empty?
 
       @uuid = uuid || SecureRandom.uuid
       @url = url
@@ -34,18 +33,27 @@ class YoutubeDL
       @title
     end
 
+    def playlist_urls
+      return [] unless playlist?
+
+      File.readlines(tmp_meta_file).map do |line|
+        JSON.parse(line)['url']
+      end
+    end
+
     def playlist?
       return false unless valid?
+
       line_count = `wc -l #{tmp_meta_file}`.strip.split(' ')[0].to_i
-      return line_count > 1
+      line_count > 1
     end
 
     def import(outdir:)
       line = Terrapin::CommandLine.new(
-        'youtube-dl', ":url -i --extract-audio --audio-format mp3 -o :out",
+        'youtube-dl', ':url -i --extract-audio --audio-format mp3 -o :out',
         expected_outcodes: [0]
       )
-      
+
       begin
         line.run(
           url: url,
@@ -57,6 +65,7 @@ class YoutubeDL
     end
 
     private
+
     attr_reader :valid, :meta
 
     def check_link
@@ -66,11 +75,11 @@ class YoutubeDL
       )
 
       begin
-        info = line.run(url: url)
+        line.run(url: url)
         @valid = true
       rescue Terrapin::ExitStatusError
         @valid = false
-        return
+        nil
       end
     end
 
@@ -80,7 +89,7 @@ class YoutubeDL
 
     def fetch_meta
       line = Terrapin::CommandLine.new(
-        'youtube-dl', ":url -j",
+        'youtube-dl', ':url -j',
         expected_outcodes: [0]
       )
 
@@ -88,7 +97,7 @@ class YoutubeDL
         info = line.run(url: url)
         @meta = JSON.parse(info)
       rescue Terrapin::ExitStatusError
-        return
+        nil
       end
     end
   end

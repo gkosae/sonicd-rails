@@ -10,11 +10,12 @@ class HooksController < ApplicationController
 
   def health
     json_response(
-      message: "Healthy"
+      message: 'Healthy'
     )
   end
 
   private
+
   def mail_list
     params[:mail_list] || []
   end

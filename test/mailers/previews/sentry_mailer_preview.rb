@@ -6,8 +6,9 @@ class SentryMailerPreview < ActionMailer::Preview
   end
 
   private
+
   def json
-    %Q{{
+    %{{
       "id": "2184324339",
       "project": "prime-api",
       "project_name": "prime-api",

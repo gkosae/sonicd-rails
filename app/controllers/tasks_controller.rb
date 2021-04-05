@@ -5,14 +5,14 @@ class TasksController < ApplicationController
 
     if url.nil? || url.empty?
       return json_response(
-        { error: "Url cannot be empty" },
+        { error: 'Url cannot be empty' },
         success: false
       )
     end
 
     if destination_directory.nil? || destination_directory.empty?
       return json_response(
-        { error: "Destination cannot be empty" },
+        { error: 'Destination cannot be empty' },
         success: false
       )
     end
@@ -40,7 +40,8 @@ class TasksController < ApplicationController
     json_response(
       task: TaskSerializer
         .new(task)
-        .serializable_hash)
+        .serializable_hash
+    )
   end
 
   def index
@@ -48,18 +49,19 @@ class TasksController < ApplicationController
     limit = params[:limit].presence || 5
 
     tasks = Task.order(created_at: :desc)
-      .page(page)
-      .per_page(limit)
-      .order(created_at: :desc)
+                .page(page)
+                .per_page(limit)
+                .order(created_at: :desc)
 
     json_response(
-      tasks: TaskSerializer.
-        new(tasks).
-        serializable_hash
+      tasks: TaskSerializer
+        .new(tasks)
+        .serializable_hash
     )
   end
 
   private
+
   def destination_param
     params[:destination_directory].split('/').map(&:strip).join('/')
   end
