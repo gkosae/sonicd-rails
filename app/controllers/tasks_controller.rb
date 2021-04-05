@@ -26,10 +26,11 @@ class TasksController < ApplicationController
       )
     end
 
+    title = destination_directory.split('/').last
     task = Task.create!(
       media_uuid: media.uuid,
       url: url,
-      title: media.title,
+      title: media.title == 'Playlist' ? title : media.title,
       destination_directory: destination_directory
     )
 

@@ -6,7 +6,7 @@ class ImportWorker
     task = Task.find(task_id)
     task.in_progress
     TasksChannel.task_updated(task)
-    
+
     begin
       YoutubeDL::Media
         .new(task.url, uuid: task.media_uuid)
