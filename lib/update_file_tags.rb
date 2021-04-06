@@ -1,32 +1,41 @@
 require 'taglib'
 
+# Update audio file title and album tags.
+# title = filename - extension
+# album = File directory relative to root of audio file store
 class UpdateFileTags
   class << self
-    def call(root_dir)
-      Dir.glob("#{root_dir}/**/*.mp3")
-         .each do |file|
-        update_tags(file, root_dir)
+    def call(root_dir, incremental: true)
+      @root_dir = root_dir
+      @incremental = incremental
+
+      Dir.glob("#{root_dir}/**/*.mp3").each do |file|
+        update_tags(file)
       end
     end
 
-    def update_tags(file, root_dir)
-      TagLib::FileRef.open(file) do |ref|
-        relative_path = file.gsub("#{root_dir}/", '')
-        attrs = relative_path.split('/')
-        filename = attrs.last
-        dir = (attrs - [filename]).join('/')
+    private
 
-        if ref.null?
-          # Skip
-        elsif ref.tag.title.present?
-          # Skip
-        else
-          tag = ref.tag
-          tag.title = filename.gsub('.mp3', '')
-          tag.album = dir.gsub('/', ' - ')
-          ref.save
-        end
+    def update_tags(file)
+      TagLib::FileRef.open(file) do |ref|
+        next if ref.null? || (@incremental && ref.tag.title.present?)
+
+        ref.tag.title = filename(file).gsub('.mp3', '')
+        ref.tag.album = dir(file).gsub('/', ' - ')
+        ref.save
       end
+    end
+
+    def dir(file)
+      (relative_path(file).split - [filename(file)]).join('/')
+    end
+
+    def filename(file)
+      relative_path(file).split('/').last
+    end
+
+    def relative_path(file)
+      file.gsub("#{@root_dir}/", '')
     end
   end
 end

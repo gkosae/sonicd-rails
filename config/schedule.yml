@@ -1,0 +1,13 @@
+---
+UpdateFileTags:
+  cron: "0 0 * * *" # At midnight
+  class: "UpdateFileTagsWorker"
+  queue: default
+MonitorTasks:
+  cron: "0 */3 * * *" # Every 3 hours
+  class: "MonitorTasksWorker"
+  queue: default
+ClearOldTasks:
+  cron: "0 0 1 * *" # 1st of every month 
+  class: "ClearOldTasksWorker"
+  queue: default

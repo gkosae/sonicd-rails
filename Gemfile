@@ -33,6 +33,7 @@ gem 'hirb'
 gem 'rack-cors'
 gem 'sentry-raven'
 gem 'sidekiq'
+gem "sidekiq-cron", "~> 1.1"
 gem 'taglib-ruby'
 gem 'terrapin', '~> 0.6.0'
 gem 'will_paginate'
