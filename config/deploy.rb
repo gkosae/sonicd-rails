@@ -14,20 +14,12 @@ set :rvm_ruby_version, '2.7.1'
 set :ssh_options, {}
 
 set :linked_dirs, fetch(:linked_dirs, []).concat(%w[log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system])
-set :log_files, %w[sidekiq.log puma.access.log puma.error.log]
-set :linked_files, fetch(:linked_files, []).concat(fetch(:log_files, []).map { |log_file| "log/#{log_file}" })
 set :linked_files, fetch(:linked_files).concat(%w[config/puma.rb db/production.sqlite3 config/master.key])
 
 set :keep_releases, 1
 
 namespace :deploy do
   namespace :check do
-    task :create_log_files do
-      on roles(:app) do
-        fetch(:log_files, []).each { |log_file| execute :touch, "#{shared_path}/log/#{log_file}" }
-      end
-    end
-
     task :create_manifest_files do
       on roles(:app) do
         [
@@ -111,7 +103,6 @@ task :setup do
 end
 
 before 'deploy:check:linked_files', 'upload_master_key'
-before 'deploy:check:linked_files', 'deploy:check:create_log_files'
 before 'deploy:check:linked_files', 'deploy:check:create_manifest_files'
 before 'deploy:check:linked_files', 'systemd:upload'
 before 'deploy:check:linked_files', 'puma:upload_config'

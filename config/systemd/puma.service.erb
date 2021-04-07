@@ -3,17 +3,17 @@ Description=SonicD Puma
 After=network.target
 
 [Service]
-Type=simple
+Type=notify
+WatchdogSec=10
+
 User=<%= fetch(:user) %>
 Environment=RAILS_ENV=<%= fetch(:stage)%>
 Environment=MALLOC_ARENA_MAX=2
 WorkingDirectory=<%= current_path %>
 ExecStart=<%= "/home/#{fetch(:user)}/.rvm/bin/rvm #{fetch(:rvm_ruby_version)} do #{current_path}/bin/bundle exec puma -C #{current_path}/config/puma.rb" %>
-ExecStop=<%= "/home/#{fetch(:user)}/.rvm/bin/rvm #{fetch(:rvm_ruby_version)} do #{current_path}/bin/bundle exec pumactl -F #{current_path}/config/puma.rb stop" %>
-ExecReload=<%= "/home/#{fetch(:user)}/.rvm/bin/rvm #{fetch(:rvm_ruby_version)} do #{current_path}/bin/bundle exec pumactl -F #{current_path}/config/puma.rb -S #{shared_path}/tmp/pids/puma.state phased-restart" %>
-TimeoutSec=15
+ExecReload=/bin/kill -USR1 $MAINPID
 Restart=always
-KillMode=process
+KillMode=mixed
 
 StandardOutput=syslog
 StandardError=syslog

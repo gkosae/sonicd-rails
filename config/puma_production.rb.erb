@@ -1,6 +1,6 @@
 environment <%= "'#{fetch(:puma_env)}'" %>
 bind <%= "'#{fetch(:puma_bind)}'" %>
-stdout_redirect <%= "'#{fetch(:puma_access_log)}'" %>, <%= "'#{fetch(:puma_error_log)}'"%>
+<%# stdout_redirect <%= "'#{fetch(:puma_access_log)}'" %>, <%= "'#{fetch(:puma_error_log)}'"%> %>
 pidfile <%= "'#{current_path}/tmp/pids/puma.pid'" %>
 state_path <%= "'#{current_path}/tmp/pids/puma.state'" %>
 
@@ -18,3 +18,4 @@ end
 
 workers <%= fetch(:puma_workers) %>
 threads <%= fetch(:puma_min_threads) %>, <%= fetch(:puma_max_threads) %>
+plugin :systemd
