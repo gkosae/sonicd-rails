@@ -3,14 +3,16 @@ Description=SonicD Sidekiq
 After=network.target
 
 [Service]
-Type=simple
+Type=notify
+WatchdogSec=10
+
 WorkingDirectory=<%= current_path %>
 ExecStart=<%= "/home/#{fetch(:user)}/.rvm/bin/rvm #{fetch(:rvm_ruby_version)} do #{current_path}/bin/bundle exec sidekiq -e #{fetch(:stage)}" %>
 User=<%= fetch(:user) %>
 UMask=0002
 
 # Greatly reduce Ruby memory fragmentation and heap usage
-# https://www.mikeperham.com/2018/04/25/taming-railss-memory-bloat/
+# https://www.mikeperham.com/2018/04/25/taming-rails-memory-bloat/
 Environment=MALLOC_ARENA_MAX=2
 
 RestartSec=1
