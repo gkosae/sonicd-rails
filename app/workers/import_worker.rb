@@ -35,10 +35,11 @@ class ImportWorker
     end
 
     Task.import(tasks)
-    task_ids = Task.where(url: media.playlist_urls).ids
+    tasks = Task.where(url: media.playlist_urls).load
+    tasks.each { |task| TasksChannel.task_created(task) }
     Sidekiq::Client.push_bulk(
       'class' => ImportWorker,
-      'args' => task_ids.map { |id| [id] }
+      'args' => tasks.map(&:id).map { |id| [id] }
     )
   end
 
