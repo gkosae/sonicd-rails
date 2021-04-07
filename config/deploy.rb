@@ -14,7 +14,7 @@ set :rvm_ruby_version, '2.7.1'
 set :ssh_options, {}
 
 set :linked_dirs, fetch(:linked_dirs, []).concat(%w[log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system])
-set :linked_files, fetch(:linked_files).concat(%w[config/puma.rb db/production.sqlite3 config/master.key])
+set :linked_files, fetch(:linked_files, []).concat(%w[config/puma.rb db/production.sqlite3 config/master.key])
 
 set :keep_releases, 1
 
