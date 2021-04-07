@@ -8,6 +8,7 @@ WatchdogSec=10
 
 User=<%= fetch(:user) %>
 Environment=RAILS_ENV=<%= fetch(:stage)%>
+Environment=ACTION_CABLE_ALLOWED_REQUEST_ORIGINS=<%= ENV['ACTION_CABLE_ALLOWED_REQUEST_ORIGINS'] %>
 Environment=RAILS_LOG_TO_STDOUT=1
 Environment=MALLOC_ARENA_MAX=2
 WorkingDirectory=<%= current_path %>

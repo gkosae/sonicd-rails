@@ -42,19 +42,14 @@ Rails.application.configure do
   # config.action_cable.mount_path = nil
   # config.action_cable.url = 'wss://example.com/cable'
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
-  config.action_cable.allowed_request_origins = [
-    'https://sonicd.georgeosae.com',
-    'http://localhost:8080',
-    '.*sentry.*',
-    'activecable://.*'
-  ]
+  config.action_cable.allowed_request_origins = ENV['ACTION_CABLE_ALLOWED_REQUEST_ORIGINS'].split(' ')
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :debug
+  # config.log_level = :debug
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
