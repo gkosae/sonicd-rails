@@ -26,6 +26,7 @@ class ImportWorker
     tasks = media.playlist_urls.map do |url|
       md = YoutubeDL::Media.new(url)
       Task.new(
+        status: :queued,
         media_uuid: md.uuid,
         url: url,
         title: md.title,
