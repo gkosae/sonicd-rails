@@ -12,13 +12,12 @@ class ImportWorker
     begin
       @media = YoutubeDL::Media.new(task.url, uuid: task.media_uuid)
       media.playlist? ? import_playlist : import_single
+      task.completed
     rescue YoutubeDL::ImportError
       task.failed
     ensure
       TasksChannel.task_updated(task)
     end
-
-    task.completed
   end
 
   private
