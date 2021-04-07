@@ -45,7 +45,8 @@ Rails.application.configure do
   config.action_cable.allowed_request_origins = [
     'https://sonicd.georgeosae.com',
     'http://localhost:8080',
-    '.*sentry.*'
+    '.*sentry.*',
+    'activecable://.*'
   ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
