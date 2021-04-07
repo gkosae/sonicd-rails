@@ -1,6 +1,5 @@
 environment <%= "'#{fetch(:puma_env)}'" %>
 bind <%= "'#{fetch(:puma_bind)}'" %>
-<%# stdout_redirect <%= "'#{fetch(:puma_access_log)}'" %>, <%= "'#{fetch(:puma_error_log)}'"%> %>
 pidfile <%= "'#{current_path}/tmp/pids/puma.pid'" %>
 state_path <%= "'#{current_path}/tmp/pids/puma.state'" %>
 
