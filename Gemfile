@@ -38,6 +38,7 @@ gem "sidekiq-cron", "~> 1.1"
 gem 'taglib-ruby'
 gem 'terrapin', '~> 0.6.0'
 gem 'will_paginate'
+gem 'activerecord-import'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

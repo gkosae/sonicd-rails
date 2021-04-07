@@ -24,18 +24,22 @@ class ImportWorker
   private
 
   def import_playlist
-    media.playlist_urls.each do |url|
+    tasks = media.playlist_urls.map do |url|
       md = YoutubeDL::Media.new(url)
-      tsk = Task.create!(
+      Task.new(
         media_uuid: md.uuid,
         url: url,
         title: md.title,
         destination_directory: task.destination_directory
       )
-
-      TasksChannel.task_created(tsk)
-      ImportWorker.perform_async(tsk.id)
     end
+
+    Task.import(tasks)
+    task_ids = Task.where(url: media.playlist_urls).ids
+    Sidekiq::Client.push_bulk(
+      'class' => ImportWorker,
+      'args' => task_ids.map { |id| [id] }
+    )
   end
 
   def import_single
