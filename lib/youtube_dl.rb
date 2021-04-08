@@ -1,6 +1,7 @@
 require 'terrapin'
 require 'securerandom'
 require 'json'
+require 'fileutils'
 
 class YoutubeDL
   class ImportError < StandardError; end
@@ -49,19 +50,38 @@ class YoutubeDL
     end
 
     def import(outdir:)
-      line = Terrapin::CommandLine.new(
+      outdir = "#{outdir}/" unless outdir.end_with?('/')
+      FileUtils.mkdir_p(outdir)
+      
+      download = Terrapin::CommandLine.new(
         'youtube-dl', ':url -i --extract-audio --audio-format mp3 -o :out',
         expected_outcodes: [0]
       )
 
+      move = Terrapin::CommandLine.new(
+        'mv', ':audio :dest',
+        expected_outcodes: [0]
+      )
+
       begin
-        line.run(
+        download.run(
           url: url,
-          out: "#{outdir}/%(title)s.%(ext)s"
+          out: "#{tmp_dir}/%(title)s.%(ext)s"
         )
+
+        move.run(
+          audio: Dir.glob("#{tmp_dir}/*.mp3").first,
+          dest: outdir
+        )
+
+        clear_tmp_dir
       rescue Terrapin::ExitStatusError
         raise YoutubeDL::ImportError
       end
+    end
+
+    def clear_tmp_dir
+      FileUtils.rm_rf(tmp_dir)
     end
 
     private
@@ -69,13 +89,16 @@ class YoutubeDL
     attr_reader :valid, :meta
 
     def check_link
+      # FileUtils.mkdir_p(tmp_dir) unless File.exist?(tmp_dir) && File.directory?(tmp_dir)
+      FileUtils.mkdir_p(tmp_dir)
+
       line = Terrapin::CommandLine.new(
-        'youtube-dl', ":url -j --flat-playlist > #{tmp_meta_file}",
+        'youtube-dl', ':url -j --flat-playlist > :meta_file',
         expected_outcodes: [0]
       )
 
       begin
-        line.run(url: url)
+        line.run(url: url, meta_file: tmp_meta_file)
         @valid = true
       rescue Terrapin::ExitStatusError
         @valid = false
@@ -84,7 +107,11 @@ class YoutubeDL
     end
 
     def tmp_meta_file
-      "/tmp/#{uuid}.json"
+      "#{tmp_dir}/meta.json"
+    end
+
+    def tmp_dir
+      "/tmp/sonicd/#{uuid}"
     end
 
     def fetch_meta

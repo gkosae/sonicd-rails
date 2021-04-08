@@ -35,12 +35,14 @@ class ImportWorker
     end
 
     Task.import(tasks)
-    tasks = Task.where(url: media.playlist_urls).load
-    tasks.each { |task| TasksChannel.task_created(task) }
+    tasks = Task.where(url: media.playlist_urls)
+    tasks.find_each { |task| TasksChannel.task_created(task) }
     Sidekiq::Client.push_bulk(
       'class' => ImportWorker,
       'args' => tasks.map(&:id).map { |id| [id] }
     )
+
+    media.clear_tmp_dir
   end
 
   def import_single
