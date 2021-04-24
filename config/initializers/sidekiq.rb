@@ -1,5 +1,5 @@
 Sidekiq.configure_server do |config|
-  config.options[:concurrency] = 4
+  config.options[:concurrency] = 8
 end
 
 schedule_file = 'config/schedule.yml'
