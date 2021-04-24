@@ -5,8 +5,7 @@ ruby '2.7.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.3', '>= 6.0.3.3'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3', '~> 1.4'
+gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 gem "puma-plugin-systemd"
@@ -58,6 +57,7 @@ group :development do
   gem 'capistrano-bundler', require: false
   gem 'capistrano-figaro-yml', '~> 1.0.2'
   gem 'capistrano-rails', require: false
+  gem 'capistrano-rails-db', require: false
   gem 'capistrano-rvm', require: false
   gem 'capistrano-simple_systemd', require: false
   gem 'sshkit-sudo'

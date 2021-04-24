@@ -18,6 +18,7 @@ require 'capistrano/rvm'
 require 'capistrano/bundler'
 require 'capistrano/rails/assets'
 require 'capistrano/rails/migrations'
+require 'capistrano/rails/db'
 require 'capistrano/figaro_yml'
 require 'capistrano/simple_systemd'
 

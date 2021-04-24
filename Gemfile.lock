@@ -80,6 +80,8 @@ GEM
     capistrano-rails (1.6.1)
       capistrano (~> 3.1)
       capistrano-bundler (>= 1.1, < 3)
+    capistrano-rails-db (0.0.2)
+      capistrano-rails (~> 1.1)
     capistrano-rvm (0.1.2)
       capistrano (~> 3.0)
       sshkit (~> 1.2)
@@ -142,6 +144,7 @@ GEM
     nio4r (2.5.4)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
+    pg (1.2.3)
     public_suffix (4.0.6)
     puma (4.3.6)
       nio4r (~> 2.0)
@@ -222,7 +225,6 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    sqlite3 (1.4.2)
     sshkit (1.21.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
@@ -271,6 +273,7 @@ DEPENDENCIES
   capistrano-bundler
   capistrano-figaro-yml (~> 1.0.2)
   capistrano-rails
+  capistrano-rails-db
   capistrano-rvm
   capistrano-simple_systemd
   capybara (>= 2.15)
@@ -278,6 +281,7 @@ DEPENDENCIES
   hirb
   jbuilder (~> 2.7)
   listen (~> 3.2)
+  pg
   puma (~> 4.1)
   puma-plugin-systemd
   rack-cors
@@ -289,7 +293,6 @@ DEPENDENCIES
   sidekiq-cron (~> 1.1)
   spring
   spring-watcher-listen (~> 2.0.0)
-  sqlite3 (~> 1.4)
   sshkit-sudo
   taglib-ruby
   terrapin (~> 0.6.0)
