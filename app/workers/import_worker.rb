@@ -23,24 +23,26 @@ class ImportWorker
   private
 
   def import_playlist
-    tasks = media.playlist_urls.map do |url|
-      md = YoutubeDL::Media.new(url)
-      Task.new(
-        status: :queued,
-        media_uuid: md.uuid,
-        url: url,
-        title: md.title,
-        destination_directory: task.destination_directory
+    media.playlist_urls.each_slice(Sidekiq.options[:concurrency]) do |batch|
+      tasks = batch.map do |url|
+        md = YoutubeDL::Media.new(url)
+        Task.new(
+          status: :queued,
+          media_uuid: md.uuid,
+          url: url,
+          title: md.title,
+          destination_directory: task.destination_directory
+        )
+      end
+
+      Task.import(tasks)
+      tasks = Task.where(url: media.playlist_urls)
+      tasks.find_each { |task| TasksChannel.task_created(task) }
+      Sidekiq::Client.push_bulk(
+        'class' => ImportWorker,
+        'args' => tasks.map(&:id).map { |id| [id] }
       )
     end
-
-    Task.import(tasks)
-    tasks = Task.where(url: media.playlist_urls)
-    tasks.find_each { |task| TasksChannel.task_created(task) }
-    Sidekiq::Client.push_bulk(
-      'class' => ImportWorker,
-      'args' => tasks.map(&:id).map { |id| [id] }
-    )
 
     media.clear_tmp_dir
   end

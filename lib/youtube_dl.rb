@@ -52,9 +52,9 @@ class YoutubeDL
     def import(outdir:)
       outdir = "#{outdir}/" unless outdir.end_with?('/')
       FileUtils.mkdir_p(outdir)
-      
+
       download = Terrapin::CommandLine.new(
-        'youtube-dl', ':url -i --extract-audio --audio-format mp3 -o :out',
+        'youtube-dl', '-i --extract-audio --audio-format mp3 -o :out -- :url',
         expected_outcodes: [0]
       )
 
@@ -89,11 +89,10 @@ class YoutubeDL
     attr_reader :valid, :meta
 
     def check_link
-      # FileUtils.mkdir_p(tmp_dir) unless File.exist?(tmp_dir) && File.directory?(tmp_dir)
       FileUtils.mkdir_p(tmp_dir)
 
       line = Terrapin::CommandLine.new(
-        'youtube-dl', ':url -j --flat-playlist > :meta_file',
+        'youtube-dl', ' -j --flat-playlist -- :url > :meta_file',
         expected_outcodes: [0]
       )
 
@@ -116,7 +115,7 @@ class YoutubeDL
 
     def fetch_meta
       line = Terrapin::CommandLine.new(
-        'youtube-dl', ':url -j',
+        'youtube-dl', '-j -- :url',
         expected_outcodes: [0]
       )
 
