@@ -54,7 +54,7 @@ class YoutubeDL
       FileUtils.mkdir_p(outdir)
 
       download = Terrapin::CommandLine.new(
-        'yt-dlp', '-i --extract-audio --audio-format mp3 -N 4 -o :out -- :url',
+        'youtube-dl', '-i --extract-audio --audio-format mp3 -o :out -- :url',
         expected_outcodes: [0]
       )
 
@@ -92,7 +92,7 @@ class YoutubeDL
       FileUtils.mkdir_p(tmp_dir)
 
       line = Terrapin::CommandLine.new(
-        'yt-dlp', ' -j --flat-playlist -- :url > :meta_file',
+        'youtube-dl', ' -j --flat-playlist -- :url > :meta_file',
         expected_outcodes: [0]
       )
 
@@ -115,7 +115,7 @@ class YoutubeDL
 
     def fetch_meta
       line = Terrapin::CommandLine.new(
-        'yt-dlp', '-j -- :url',
+        'youtube-dl', '-j -- :url',
         expected_outcodes: [0]
       )
 
