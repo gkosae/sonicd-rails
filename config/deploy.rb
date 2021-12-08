@@ -79,7 +79,7 @@ namespace :nginx do
       upload! StringIO.new(config), "#{fetch(:tmp_dir)}/#{fetch(:nginx_server_name)}"
 
       sudo :mv, "#{fetch(:tmp_dir)}/#{fetch(:nginx_server_name)}", "/etc/nginx/sites-available/#{fetch(:nginx_server_name)}"
-      sudo :rm, "/etc/nginx/sites-enabled/#{fetch(:nginx_server_name)}"
+      sudo :rm, "/etc/nginx/sites-enabled/#{fetch(:nginx_server_name)} || true"
       sudo :ln, '-s', "/etc/nginx/sites-available/#{fetch(:nginx_server_name)}", "/etc/nginx/sites-enabled/#{fetch(:nginx_server_name)}"
       sudo :nginx, '-t'
       sudo :service, :nginx, :reload
