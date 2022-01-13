@@ -63,14 +63,27 @@ class YoutubeDL
         expected_outcodes: [0]
       )
 
+      convert = Terrapin::CommandLine.new(
+        'ffmpeg', '-i :input -acodec libvorbis :output',
+        expected_outcodes: [0]
+      )
+
       begin
         download.run(
           url: url,
           out: "#{tmp_dir}/%(title)s.%(ext)s"
         )
 
+        input = Dir.glob("#{tmp_dir}/*.mp3").first
+        output = input.gsub(/(\.mp3)$/,".ogg")
+
+        convert.run(
+          input: input,
+          output: output
+        )
+
         move.run(
-          audio: Dir.glob("#{tmp_dir}/*.mp3").first,
+          audio: Dir.glob("#{tmp_dir}/*.ogg").first,
           dest: outdir
         )
 
