@@ -74,16 +74,16 @@ class YoutubeDL
           out: "#{tmp_dir}/%(title)s.%(ext)s"
         )
 
-        input = Dir.glob("#{tmp_dir}/*.mp3").first
-        output = input.gsub(/(\.mp3)$/,".ogg")
+        # input = Dir.glob("#{tmp_dir}/*.mp3").first
+        # output = input.gsub(/(\.mp3)$/,".ogg")
 
-        convert.run(
-          input: input,
-          output: output
-        )
+        # convert.run(
+        #   input: input,
+        #   output: output
+        # )
 
         move.run(
-          audio: Dir.glob("#{tmp_dir}/*.ogg").first,
+          audio: Dir.glob("#{tmp_dir}/*.mp3").first,
           dest: outdir
         )
 
